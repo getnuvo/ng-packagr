@@ -1,6 +1,6 @@
 {
-  "name": "ng-packagr",
-  "version": "17.1.0",
+  "name": "@getnuvo/ng-packagr",
+  "version": "17.1.1",
   "description": "Compile and package Angular libraries in Angular Package Format (APF)",
   "keywords": [
     "apf",
@@ -18,10 +18,7 @@
   },
   "author": "David Herges <david@spektrakel.de>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ng-packagr/ng-packagr.git"
-  },
+  "repository": "getnuvo/ng-packagr",
   "homepage": "https://github.com/ng-packagr/ng-packagr",
   "bugs": {
     "url": "https://github.com/ng-packagr/ng-packagr/issues"
@@ -32,6 +29,7 @@
   "main": "./public_api.js",
   "typings": "./public_api.d.ts",
   "dependencies": {
+    "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-json": "^6.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/wasm-node": "^4.5.0",
@@ -52,6 +50,7 @@
     "ora": "^5.1.0",
     "piscina": "^4.2.0",
     "postcss": "^8.4.31",
+    "rollup-plugin-sourcemaps": "0.6.3",
     "rxjs": "^7.8.1",
     "sass": "^1.69.5"
   },

@@ -71,3 +71,9 @@ dist/
 
 # Tests
 .tmp
+
+.vscode/
+
+yarn.lock
+
+.npmrc
