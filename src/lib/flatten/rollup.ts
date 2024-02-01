@@ -1,6 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 import rollupJson from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
+import MagicString from 'magic-string';
 import * as path from 'path';
 import type { OutputAsset, OutputChunk, RollupCache } from 'rollup';
 import sourcemaps from 'rollup-plugin-sourcemaps';
@@ -38,6 +39,34 @@ export async function rollupBundleFile(
 
   const cacheDirectory = opts.cacheDirectory;
 
+  function customReplace() {
+    return {
+      name: 'custom-replace',
+      transform(code, _id) {
+        const magicCode = new MagicString(code);
+        // Define the patterns to search for
+        const patterns = [
+          /ɵɵngDeclareComponent\(\{ minVersion: "14\.0\.0",/g,
+          /ɵɵngDeclareNgModule\(\{ minVersion: "14\.0\.0",/g
+        ];
+
+        patterns.forEach(pattern => {
+          let match;
+          // Loop over all matches for the pattern
+          while ((match = pattern.exec(code)) !== null) {
+            // Replace the matched text with the desired version
+            magicCode.overwrite(match.index, match.index + match[0].length, match[0].replace('14.0.0', '12.0.0'));
+          }
+        });
+
+        return {
+          code: magicCode.toString(),
+          map: magicCode.generateMap({ hires: true }) // Generates a proper sourcemap
+        };
+      }
+    };
+  }
+
   // Create the bundle
   const bundle = await rollup.rollup({
     context: 'this',
@@ -48,6 +77,7 @@ export async function rollupBundleFile(
       nodeResolve(),
       commonjs(),
       rollupJson(),
+      customReplace(),
       sourcemaps({
         readFile: (path: string, callback: (error: Error | null, data: Buffer | string) => void) => {
           const fileData = opts.fileCache.get(ensureUnixPath(path));
